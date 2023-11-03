@@ -1,0 +1,144 @@
+<html>
+<head>
+<link href="../css/bootstrap.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../font/css/fontello.css" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+<html>
+<head>
+<link href="css/bootstrap.css" rel="stylesheet">
+<div class="navbar">
+<div class="navbar-inner">
+<ul class="nav nav-collapse pull-centre">
+<li><a href="../index.html"><i class="icon-user"></i> terug</a></li>
+<li><a href="../skills.html" class="active"><i class="icon-trophy"></i>vaardigheden</a></li>
+<div class="nav-collapse collapse"></div></div>
+<title>EindkapitaalRekenmachine</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript">
+/* <![CDATA[ */
+
+
+
+
+
+
+function berekening() {
+var beginkapitaal=document.getElementById("beginkapitaal").value;
+var intrest=document.getElementById("intrest").value;
+var aantal_jaar=document.getElementById("aantal_jaar").value;
+var Kapitaal = beginkapitaal;
+var eindKapitaal = "banaan";
+intrest /= 100;
+
+
+
+
+
+for (i = 0; i < aantal_jaar; i++) {
+Kapitaal -= Kapitaal * intrest;
+}
+
+
+
+
+
+eindKapitaal = Math.round(Kapitaal * 100) / 100;
+
+
+
+
+
+var dropdown = document.getElementById('landdropdown');
+var land = dropdown.options[dropdown.selectedIndex].value;
+
+
+
+
+
+var opmaak = {style:"currency", currency:""};
+var locale = "";
+
+
+
+
+
+if (land == "nederland")
+{
+opmaak.currency = "EUR";
+locale = "nl-NL";
+}
+else if (land == "finland")
+{
+opmaak.currency = "EUR";
+locale = "fi-FI";
+}
+else if (land == "amerika")
+{
+opmaak.currency = "USD";
+locale = "en-US";
+}
+else if (land == "engeland")
+{
+opmaak.currency = "GBP";
+locale = "en-GB";
+}
+
+
+
+
+
+document.getElementById("eindkapitaal").value = eindKapitaal.toLocaleString(locale, opmaak);
+}
+
+
+
+
+
+/* ]]> */
+</script>
+</head>
+<body>
+
+
+
+<form action="">
+<label for="land">kies een land:</label>
+<select id="landdropdown" name="land">
+<option value="nederland">Nederland</option>
+<option value="finland">Finland</option>
+<option value="amerika">Amerika</option>
+<option value="engeland">Engeland</option>
+</select>
+</form>
+
+
+
+
+
+<form action=""><table border="1" cellpadding="5">
+<thead>
+<tr>
+<th>Beginkapitaal</th>
+<th>Intrest</th>
+<th>Aantal jaar</th>
+<th>Eindkapitaal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><input type="text" id="beginkapitaal" name="beginkapitaal" /></td>
+<td><input type="text" id="intrest" name="intrest"/></td>
+<td><input type="text" id="aantal_jaar" name="aantal_jaar" /></td>
+<td><input type="text" id="eindkapitaal" name="eindkapitaal" onselect="blur()" /></td>
+</tr>
+</tbody>
+</table><p>
+<input type="button" value="Bereken eindkapitaal" onclick="berekening()" />
+<input type="reset" value="Opnieuw beginnen" />
+</p>
+</form>
+</body>
+</html>
+
+

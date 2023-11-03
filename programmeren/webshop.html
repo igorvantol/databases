@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Voetbalshop Holland</title>
+</head>
+<body>
+
+<p><b>Voetbalshop Holland - Administratie </b></p>
+
+<button onclick="maakTabel()">Maak een tabel</button> <button onclick="verwijderTabel()">Verwijder een tabel</button>
+
+<br><br>
+
+<form>
+
+<b><p>--- Vul de gegevens van de medewerker in. ---</p></b>
+
+  <label for="naam">Naam:</label>
+  <input type="text" id="naam" name="naam"><br><br>
+
+  <label for="adress">Adres:</label>
+  <input type="text" id="adress" name="adress"><br><br>
+
+  <label for="telefoonnummer">Telefoonnummer:</label>
+  <input type="text" id="telefoonnummer" name="telefoonnummer"><br><br>
+
+  <b><p>--- Opties voor deze medewerker: ---</p></b>
+  
+  <input type="button" value="Medewerker toevoegen" onclick="voegMedewerkerToe()"><br><br><br><br>
+
+  <label for="pasAan">Naam bestaande medewerker:</label>
+  <input type="text" id="pasAan" name="pasAan"><br><br>
+  <input type="button" value="Pas gegevens aan naar ingevulde gegevens boven" onclick="pasMedewerkerAan()">
+
+  <input type="button" value="Medewerker verwijderen" onclick="verwijderMederwerker()">
+
+  
+</form>
+
+<br><b><p>--- Medewerkers ---</p></b>
+
+<label class="status title">Medewerkers:</div><br>
+<div class="content" id="Medewerkers" ></div><br>
+
+<script>
+
+	var database = null;
+	database = openDatabase('FrietVanPiet', '1.0', 'FrietVanPietWebWinkel', 1024 * 1024);
+
+	medewerkerLijst();
+	
+		function maakTabel(){
+		
+			console.log("maakTabel");
+
+			database.transaction(function (query) {
+			query.executeSql('CREATE TABLE IF NOT EXISTS MEDEWERKERS (MedewerkerNaam varchar(255), Adress varchar(255),' +
+			'TelefoonNummer int);');
+			});
+
+			medewerkerLijst();
+		}
+
+		function verwijderTabel(){
+		
+			console.log("verwijderTabel");
+
+			database.transaction(function (query) {
+			query.executeSql('DROP TABLE MEDEWERKERS');
+			});
+
+			medewerkerLijst();
+		}
+
+		function voegMedewerkerToe(){
+
+			var MedewerkerNaam = document.getElementById("naam").value;
+			var Adress = document.getElementById("adress").value;
+			var TelefoonNummer = document.getElementById("telefoonnummer").value;
+
+			console.log(MedewerkerNaam);
+
+			var variabelen = [MedewerkerNaam, Adress, TelefoonNummer];
+
+			database.transaction(function (query) {
+			query.executeSql('INSERT INTO MEDEWERKERS (MedewerkerNaam, Adress, TelefoonNummer)' +
+			'VALUES (?, ?, ?)', variabelen, function (query, result){
+				})});
+
+				medewerkerLijst();
+
+		}
+
+		function verwijderMederwerker(){
+
+		var MedewerkerNaam = document.getElementById("pasAan").value;
+
+		console.log(MedewerkerNaam);
+
+		database.transaction(function (query) {
+			query.executeSql('DELETE FROM MEDEWERKERS WHERE MedewerkerNaam=?', [MedewerkerNaam], function (query, result){
+				})});
+
+				medewerkerLijst();
+
+		}
+
+		function pasMedewerkerAan(){
+
+			var MedewerkerNaam = document.getElementById("naam").value;
+			var Adress = document.getElementById("adress").value;
+			var TelefoonNummer = document.getElementById("telefoonnummer").value;
+
+			var MedewerkerNaamOud = document.getElementById("pasAan").value;
+
+			var variabelen = [MedewerkerNaam, Adress, TelefoonNummer, MedewerkerNaamOud];
+
+		database.transaction(function (query) {
+			query.executeSql('UPDATE MEDEWERKERS SET MedewerkerNaam=?, Adress=?, TelefoonNummer=? WHERE MedewerkerNaam=?', variabelen, function (query, result){
+				})});
+
+		medewerkerLijst();
+
+		}
+
+		function medewerkerLijst() {
+		 var medewerkersList = document.getElementById("Medewerkers");
+		 medewerkersList.innerHTML = "";
+
+		 database.transaction(function (query) {
+		  query.executeSql('SELECT * FROM MEDEWERKERS', [], function (query, result) {
+		   var rows = result.rows;
+		   for (var i = 0; i < rows.length; i++) {
+		     var medewerkerNaam = rows.item(i).MedewerkerNaam;
+		     var listItem = document.createElement("li");
+		     listItem.textContent = medewerkerNaam;
+		     medewerkersList.appendChild(listItem);
+		   }
+		  });
+		  });
+		}
+
+</script>
+
+</body>
+</html>
